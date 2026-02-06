@@ -1,13 +1,13 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
-import { KanbanTask, KanbanState, KanbanColumnId, KanbanColumn } from "@/types";
+import { KanbanTask, KanbanState, KanbanColumnId, KanbanColumn, KanbanPriority } from "@/types";
 import { generateId } from "@/lib/utils";
 
 interface KanbanActions {
-  addTask: (columnId: KanbanColumnId, title: string, description?: string) => void;
+  addTask: (columnId: KanbanColumnId, title: string, description?: string, priority?: KanbanPriority) => void;
   moveTask: (taskId: string, toColumnId: KanbanColumnId, newIndex: number) => void;
   reorderTasks: (columnId: KanbanColumnId, taskIds: string[]) => void;
-  updateTask: (taskId: string, updates: Partial<Pick<KanbanTask, "title" | "description">>) => void;
+  updateTask: (taskId: string, updates: Partial<Pick<KanbanTask, "title" | "description" | "priority">>) => void;
   deleteTask: (taskId: string) => void;
 }
 
@@ -26,7 +26,7 @@ export const useKanbanStore = create<KanbanState & KanbanActions>()(
     (set) => ({
       ...initialState,
 
-      addTask: (columnId, title, description) => {
+      addTask: (columnId, title, description, priority = "medium") => {
         const id = `task-${generateId()}`;
         const now = Date.now();
 
@@ -37,6 +37,7 @@ export const useKanbanStore = create<KanbanState & KanbanActions>()(
               id,
               title,
               description,
+              priority,
               columnId,
               createdAt: now,
               updatedAt: now,

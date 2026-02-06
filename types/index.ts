@@ -1,9 +1,12 @@
 export type KanbanColumnId = "todo" | "in-progress" | "complete";
 
+export type KanbanPriority = "low" | "medium" | "high";
+
 export interface KanbanTask {
   id: string;
   title: string;
   description?: string;
+  priority: KanbanPriority;
   columnId: KanbanColumnId;
   createdAt: number;
   updatedAt: number;

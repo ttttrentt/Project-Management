@@ -17,7 +17,13 @@ import {
 import { useKanbanStore } from "@/stores/useKanbanStore";
 import { KanbanColumn } from "./KanbanColumn";
 import { KanbanCard } from "./KanbanCard";
-import { KanbanTask, KanbanColumnId } from "@/types";
+import { KanbanTask, KanbanColumnId, KanbanPriority } from "@/types";
+
+const priorityWeight: Record<KanbanPriority, number> = {
+  high: 0,
+  medium: 1,
+  low: 2,
+};
 
 const collisionDetection: CollisionDetection = (args) => {
   const pointerCollisions = pointerWithin(args);
@@ -111,7 +117,8 @@ export function KanbanBoard() {
               column={columns[columnId]}
               tasks={columns[columnId].taskIds
                 .map((id) => tasks[id])
-                .filter(Boolean)}
+                .filter(Boolean)
+                .sort((a, b) => priorityWeight[a.priority ?? "medium"] - priorityWeight[b.priority ?? "medium"])}
             />
           </div>
         ))}

@@ -2,7 +2,13 @@
 
 import { useState } from "react";
 import { useKanbanStore } from "@/stores/useKanbanStore";
-import { KanbanColumnId } from "@/types";
+import { KanbanColumnId, KanbanPriority } from "@/types";
+
+const priorities: { value: KanbanPriority; label: string; color: string }[] = [
+  { value: "low",    label: "L", color: "var(--color-text-ghost)" },
+  { value: "medium", label: "M", color: "var(--color-ember)" },
+  { value: "high",   label: "H", color: "var(--color-danger)" },
+];
 
 interface AddTaskFormProps {
   columnId: KanbanColumnId;
@@ -11,13 +17,15 @@ interface AddTaskFormProps {
 export function AddTaskForm({ columnId }: AddTaskFormProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [title, setTitle] = useState("");
+  const [priority, setPriority] = useState<KanbanPriority>("medium");
   const addTask = useKanbanStore((state) => state.addTask);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (title.trim()) {
-      addTask(columnId, title.trim());
+      addTask(columnId, title.trim(), undefined, priority);
       setTitle("");
+      setPriority("medium");
       setIsOpen(false);
     }
   };
@@ -25,6 +33,7 @@ export function AddTaskForm({ columnId }: AddTaskFormProps) {
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Escape") {
       setTitle("");
+      setPriority("medium");
       setIsOpen(false);
     }
   };
@@ -58,6 +67,23 @@ export function AddTaskForm({ columnId }: AddTaskFormProps) {
           className="w-full bg-transparent text-sm text-[var(--color-text)] placeholder:text-[var(--color-text-ghost)] focus:outline-none"
         />
       </div>
+      <div className="flex items-center gap-1">
+        {priorities.map((p) => (
+          <button
+            key={p.value}
+            type="button"
+            onClick={() => setPriority(p.value)}
+            className="w-7 h-7 rounded-md text-[10px] font-bold uppercase tracking-wide transition-all duration-200"
+            style={
+              priority === p.value
+                ? { color: p.color, backgroundColor: `color-mix(in srgb, ${p.color} 18%, transparent)`, boxShadow: `0 0 0 1px ${p.color}` }
+                : { color: "var(--color-text-ghost)", backgroundColor: "transparent" }
+            }
+          >
+            {p.label}
+          </button>
+        ))}
+      </div>
       <div className="flex items-center gap-2">
         <button
           type="submit"
@@ -69,6 +95,7 @@ export function AddTaskForm({ columnId }: AddTaskFormProps) {
           type="button"
           onClick={() => {
             setTitle("");
+            setPriority("medium");
             setIsOpen(false);
           }}
           className="px-4 py-2 text-[11px] text-[var(--color-text-ghost)] hover:text-[var(--color-text-dim)] uppercase tracking-wide transition-colors"
