@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "Bash(npx create-next-app:*)",
+      "Bash(source:*)",
+      "Bash(source ~/.bashrc)",
+      "Bash(export PATH=\"/opt/homebrew/bin:/usr/local/bin:$HOME/.nvm/versions/node/*/bin:$PATH\")",
+      "Bash(node --version:*)",
+      "Bash(/opt/homebrew/bin/npm install next@latest)",
+      "Bash(/opt/homebrew/bin/npm install @tailwindcss/postcss)",
+      "Bash(/opt/homebrew/bin/npm install zustand @dnd-kit/core @dnd-kit/sortable @dnd-kit/utilities)",
+      "Bash(/opt/homebrew/bin/npm run build)",
+      "Bash(/opt/homebrew/bin/npm run dev)",
+      "Bash(npm run dev:*)",
+      "Bash(grep:*)"
+    ]
+  }
+}
